@@ -49,7 +49,7 @@ public class Square implements ISquare {
 
 	private ISquare findRelativeSquareFromLast(int moves){
 		ISquare lastSquare = game.findLastSquare();
-		return game.findSquare( lastSquare.getPosition()+ moves);
+		return game.findSquare( lastSquare.getPosition() + moves);
 	}
 	
 	@Override
@@ -57,12 +57,12 @@ public class Square implements ISquare {
 		int lastPosition = game.findLastSquare().getPosition();
 
 		if (position+moves>lastPosition) {
-			int movesToDo = lastPosition - (position + moves) ;
-			System.out.println("Should go to " + (position+movesToDo)
+			int backwardMovesToDo = lastPosition - (position + moves) ;
+			System.out.println("Should go to " + (position+backwardMovesToDo)
 					+ " beyond last square " + (lastPosition+1) 
-					+ " so you will move back " + (-1 * movesToDo));
+					+ " so you will move back " + (-1 * backwardMovesToDo));
 
-			return findRelativeSquareFromLast(movesToDo).landHereOrGoHome();
+			return findRelativeSquareFromLast(backwardMovesToDo).landHereOrGoHome();
 		}
 
 		System.out.println("move from " + (position+1) + " to "

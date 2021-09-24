@@ -23,6 +23,11 @@ public class Square implements ISquare {
 	}
 
 	@Override
+	public boolean isDeath() {
+		return false;
+	}
+
+	@Override
 	public boolean isLastSquare() {
 		return false;
 	}

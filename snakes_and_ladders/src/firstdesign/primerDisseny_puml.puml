@@ -6,6 +6,7 @@ skinparam linetype polyline
 interface ISquare {
     {abstract} isFirstSquare() : boolean
     {abstract} isLastSquare() : boolean
+    {abstract} isDeath() : boolean
     {abstract} enter(p : Player)
     {abstract} leave(p : Player)
     {abstract} isOccupied() : boolean
@@ -32,7 +33,7 @@ class Square implements ISquare {
 
 class Player {
 - name : String
-+ moveForward(moves : int)
++ moveForward(moves : int) : boolean
 + position() : int 
 + wins() : boolean
 }
@@ -45,7 +46,7 @@ class Dice {
 }
 
 class Game {
-+ Game(playerNames: String[], numSquares : int, \n\t    snakes : int[][], ladders : int[][])
++ Game(playerNames: String[], numSquares : int, \n\t    snakes : int[][], ladders : int[][], deathPosition : int)
 + play()
 + firstSquare() : ISquare 
 + findSquare(pos : int) : ISquare
@@ -62,7 +63,7 @@ class LastSquare extends Square {
     + isLastSquare() : boolean
 }
 
-class LadderOrSnake extends Square {
+class LadderOrSnakeSquare extends Square {
     - transport : int
 }
 
@@ -72,8 +73,8 @@ class FirstSquare extends Square {
     + leave(p : Player)
 }
 
-class Death extends Square {
-
+class DeathSquare extends Square {
+    +isDeath() : boolean
 }
 
 Square -up-> "1" Game : game

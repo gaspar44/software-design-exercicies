@@ -31,39 +31,39 @@ public class Game {
 		return squares.size();
 	}
 	
-	private void createGame(int numSquares, int[][] ladders, int[][] snakes, int death) {
+	private void createGame(int numSquares, int[][] ladders, int[][] snakes, int deathPosition) {
 		System.out.println("There are " + numSquares + " squares");
 		squares.add(new FirstSquare(0,this));
 
 		for (int position=1 ; position<numSquares-1 ; position++) {
-			Square square = new Square(position, this);
+			Square square = position != deathPosition ? new Square(position, this) : new DeathSquare(position,this);
 			squares.add(square);
 		}
 
 		squares.add(new LastSquare(numSquares-1,this));
 
-		setSquares(snakes);
-		setSquares(ladders);
-
+		setSquares(snakes,"snake");
+		setSquares(ladders,"ladder");
+		System.out.println("Death at " + (deathPosition + 1) );
 	}
 
-	private void setSquares(int[][] squareType) {
+	private void setSquares(int[][] squareType, String squareTypeName) {
 		for (int i = 0; i< squareType.length ; i++) {
 			assert squareType[i].length == 2;
 			
 			int fromPosition = squareType[i][0]-1;
 			int toPosition = squareType[i][1]-1;
 			int transport = toPosition - fromPosition;
-			
-			assert transport<0 : "In snake, destination after origin";
+
 			assert (toPosition > 0) && (toPosition<numberOfSquares()-1);
 			assert (fromPosition < numberOfSquares()-1) && (fromPosition>0);
-			
-			System.out.println("snake from " + (fromPosition+1) 
-					+ " to " + (toPosition+1));
-			
-			squares.set(fromPosition, new LadderOrSnake(fromPosition,this, transport));
+
+			String messageToPrint = squareTypeName + " from " + (fromPosition + 1) + " to " + (toPosition + 1);
+			System.out.println(messageToPrint);
+
+			squares.set(fromPosition, new LadderOrSnakeSquare(fromPosition,this, transport));
 		}
+
 	}
 
 	public ISquare firstSquare() {
@@ -81,8 +81,15 @@ public class Game {
 
 	private void movePlayer(int roll) {
 		Player currentPlayer = players.remove();
-		currentPlayer.moveForward(roll);
-		players.add(currentPlayer);
+		boolean isDeath = currentPlayer.moveForward(roll);
+
+		if (!isDeath) {
+			players.add(currentPlayer);
+		}
+		else {
+			System.out.println("player " + currentPlayer.getName() + " is death. Gameover");
+		}
+
 		if (currentPlayer.wins()) {
 			winner = currentPlayer;
 		}
@@ -105,8 +112,12 @@ public class Game {
 			System.out.println("State : \n" + this);
 		}
 
+		if (winner != null) {
+			System.out.println(winner.getName() + " has won");
+			return ;
+		}
 
-		System.out.println(winner + " has won.");
+		System.out.println("all players are death. Game Over");
 	}
 	
 	public ISquare findSquare(int position) {

@@ -8,7 +8,7 @@ public class FirstSquare extends Square {
 
 	public FirstSquare(int pos, Game g) {
 		super(pos, g);
-		assert pos==1;
+		//assert pos==1;
 	}
 
 	private Collection<Player> players = new ArrayList<Player>();

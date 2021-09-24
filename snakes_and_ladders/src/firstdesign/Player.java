@@ -29,11 +29,12 @@ public class Player {
 		return square.isLastSquare();
 	}
 	
-	public void moveForward(int moves) {
+	public boolean moveForward(int moves) {
 		assert moves>0 : "non-positive moves";
 		square.leave(this);
 		square = square.moveAndLand(moves);
 		square.enter(this);
+		return square.isDeath();
 	}
 	
 	public int position() {

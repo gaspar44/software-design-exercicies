@@ -5,6 +5,8 @@ public interface ISquare {
 	public Player getPlayer();
 	
 	public boolean isFirstSquare();
+
+	public boolean isDeath();
 	
 	public boolean isLastSquare();
 	

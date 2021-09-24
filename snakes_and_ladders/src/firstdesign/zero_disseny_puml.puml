@@ -1,0 +1,52 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+
+interface ISquare {
+    isLastSquare() : boolean
+    isOccupied() : boolean
+    getPosition() : int
+}
+
+class Game {
+    Game(playerNames: String[], numSquares : int, \n\t  snakes : int[][], ladders : int[][])
+    - createGame(numSquares : int, snakes : int[][], \n\t\t    ladders : int[][])
+    - createPlayers(String[])
+    + play()
+}
+
+class Player {
+    - name : String
+}
+
+Game o--left--> "1..*" ISquare : squares
+Square -up-> "1" Game : game
+Game o-down-> "*" Player : players
+
+class Square implements ISquare {
+    - position : int
+    + isLastSquare() : boolean
+    + isOccupied() : boolean
+    + getPosition() : int
+}
+
+class LastSquare extends Square {
+    + isLastSquare() : boolean
+}
+
+class Snake extends Square {
+    - transport : int
+}
+
+class Ladder extends Square {
+    - transport : int
+}
+
+class FirstSquare extends Square {
+    + isOccupied() : boolean
+}
+
+Square "1\nsquare" ---right---> Player : "0,1\nplayer"
+FirstSquare x-up-> "*" Player : players
+@enduml

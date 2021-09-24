@@ -1,0 +1,85 @@
+@startuml 
+
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+
+interface ISquare {
+    {abstract} isFirstSquare() : boolean
+    {abstract} isLastSquare() : boolean
+    {abstract} enter(p : Player)
+    {abstract} leave(p : Player)
+    {abstract} isOccupied() : boolean
+    {abstract} getPosition() : int
+    {abstract} moveAndLand(moves : int)
+    {abstract} landHereOrGoHome() : ISquare
+}
+
+class Square implements ISquare {
+    - position : int
+    + Square(pos : int, game : Game)
+    + isFirstSquare() : boolean
+    + isLastSquare() : boolean
+    + enter(p : Player)
+    + leave(p : Player)
+    + isOccupied() : boolean
+    + getPosition() : int
+    + moveAndLand(moves : int)
+    + landHereOrGoHome() : ISquare
+    - findRelativeSquare(shift : int) : ISquare
+    - findFirstSquare() : ISquare
+    - findRelativeSquareFromLast() : ISquare
+}
+
+class Player {
+- name : String
++ moveForward(moves : int)
++ position() : int 
++ wins() : boolean
+}
+
+class Dice {
+- MinValue
+- MaxValue
++ roll() : int
+- random(): int
+}
+
+class Game {
++ Game(playerNames: String[], numSquares : int, \n\t    snakes : int[][], ladders : int[][])
++ play()
++ firstSquare() : ISquare 
++ findSquare(pos : int) : ISquare
++ findLastSquare() : ISquare
+- createPlayers(names : String[])
+- createGame(names : String, numSquares : int, \n\t\t    snakes : int[][], ladders : int[][]) 
+- numberOfSquares() : int
+- currentPlayer() : Player 
+- notOver() : boolean 
+- movePlayer(moves : int)
+}
+
+class LastSquare extends Square {
+    + isLastSquare() : boolean
+}
+
+class Snake extends Square {
+    - transport : int
+}
+
+class Ladder extends Square {
+    - transport : int
+}
+
+class FirstSquare extends Square {
+    + isOccupied() : boolean
+    + enter(p : Player)
+    + leave(p : Player)
+}
+
+Square -up-> "1" Game : game
+Game --left--> "*" ISquare : squares
+Square "1\nsquare" ----right----> "0,1\n" Player : player
+Game -down-> "1" Player : winner
+Game -down-> "1" Dice: thorws
+FirstSquare x-up-> "*" Player : players
+@enduml

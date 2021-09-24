@@ -1,0 +1,108 @@
+@startuml 
+
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+
+class Game {
+    + Game(playerNames: String[], numSquares : int, \n\t    snakes : int[][], ladders : int[][])
+    + play()
+    - makeBoard(numSquares : int, \n\t\t  snakes : int[][], ladders : int[][])
+    - makePlayers(names : String[])
+    - startGame()
+    - placePlayersAtFirstSquare()
+    - notOver() : boolean
+    - movePlayer(roll : int)
+    - currentPlayer() : Player
+}
+
+class Die {
+    - {static} MIN_VALUE : int = 1
+    - {static} MAX_VALUE : int = 6
+    + roll() : int
+}
+
+class Player {
+    - name : String
+    + position() : int 
+    + wins() : boolean 
+    + moveForward(moves : int)
+}
+
+class Square {
+    - position : int
+    + isOccupied() : boolean
+    + isLastSquare() : boolean 
+    + moveAndLand(moves : int) : Square
+    + landHereOrGoHome() : Square 
+    + enter (p : Player)
+    + leave (p : Player)
+    + findRelativeSquare(shift : int) : Square
+    + findFirstSquare() : Square 
+    + findLastSquare() : Square 
+}
+
+class Board {
+    + Board(numSquares : int, snakes : int[][], ladders : int[][])
+    + firstSquare() : Square 
+    + lastSquare() : Square 
+    + findSquare() : Square 
+    - numberOfSquares() : int 
+    - makeSnakes(snakes : int[][])
+    - makeLadders(ladders : int[][])
+}
+
+abstract class SquareRole {
+    + SquareRole(s : Square)
+    + isOccupied() : boolean 
+    + isFirstSquare() : boolean 
+    + isLastSquare() : boolean 
+    + moveAndLand(moves : int) : Square
+    + landHereOrGoHome() : Square 
+    + enter(p : Player)
+    + leave(p : Player)
+}
+
+class FirstSquareRole extends SquareRole {
+    + isOccupied() : boolean 
+    + enter(p : Player)
+    + leave(p : Player)
+    + isFirstSquare() : boolean 
+}
+
+class LastSquareRole extends SquareRole {
+    + isLastSquare() : boolean     
+}
+
+class LadderRole extends SquareRole {
+    + landHereOrGoHome() : Square     
+}
+
+class SnakeRole extends SquareRole {
+    + landHereOrGoHome() : Square 
+}
+
+class RegularSquareRole extends SquareRole {
+}
+
+Game -down-> "1" Die : die
+Game +-- Die 
+'inner class
+Die -[hidden]right-> Player
+Game -down-> "*" Player : players
+Game -down-> "1" Player : winner
+Game --right--> "1" Board : board
+Player "1\nsquare" <-right-> "1" Square : square
+Board "1\nboard" *-down-> "*" Square : squares
+Square "1\nsquare" <-right-> "1" SquareRole : squareRole
+
+note right of SquareRole
+implementation for regular square to be
+overriden by other kinds of squares
+end note
+
+note bottom of Die
+inner class 
+within Game
+end note
+
+@enduml

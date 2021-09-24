@@ -10,9 +10,9 @@ public class Game {
 	private Player winner;
 	
 	public Game(String[] playerNames,
-			int numSquares, int[][] ladders, int[][] snakes) {
+			int numSquares, int[][] ladders, int[][] snakes,int death) {
 		createPlayers(playerNames);
-		createGame(numSquares, ladders, snakes);
+		createGame(numSquares, ladders, snakes, death);
 		play();
 	}
 
@@ -30,20 +30,29 @@ public class Game {
 	private int numberOfSquares() {
 		return squares.size();
 	}
-	private void createGame(int numSquares, int[][] ladders, int[][] snakes) {
+	
+	private void createGame(int numSquares, int[][] ladders, int[][] snakes, int death) {
 		System.out.println("There are " + numSquares + " squares");
 		squares.add(new FirstSquare(0,this));
+
 		for (int position=1 ; position<numSquares-1 ; position++) {
 			Square square = new Square(position, this);
 			squares.add(square);
 		}
+
 		squares.add(new LastSquare(numSquares-1,this));
-		
-		for (int i=0; i<snakes.length ; i++) {
-			assert snakes[i].length == 2;
+
+		setSquares(snakes);
+		setSquares(ladders);
+
+	}
+
+	private void setSquares(int[][] squareType) {
+		for (int i = 0; i< squareType.length ; i++) {
+			assert squareType[i].length == 2;
 			
-			int fromPosition = snakes[i][0]-1;
-			int toPosition = snakes[i][1]-1;
+			int fromPosition = squareType[i][0]-1;
+			int toPosition = squareType[i][1]-1;
 			int transport = toPosition - fromPosition;
 			
 			assert transport<0 : "In snake, destination after origin";
@@ -53,38 +62,21 @@ public class Game {
 			System.out.println("snake from " + (fromPosition+1) 
 					+ " to " + (toPosition+1));
 			
-			squares.set(fromPosition, new Snake(fromPosition,this, transport));		
+			squares.set(fromPosition, new LadderOrSnake(fromPosition,this, transport));
 		}
-
-		for (int i=0; i<ladders.length; i++) {
-			assert ladders[i].length == 2;
-			
-			int fromPosition = ladders[i][0]-1;
-			int toPosition = ladders[i][1]-1;
-			int transport = toPosition - fromPosition;
-			
-			assert transport>0 : "In ladder, origin after destination";
-			assert (toPosition < numberOfSquares()) && (toPosition > 0);
-			assert (fromPosition > 0) && (fromPosition < numberOfSquares());
-			
-			System.out.println("ladder from " + (fromPosition+1) 
-					+ " to " + (toPosition+1));
-			
-			squares.set(fromPosition, new Ladder(fromPosition,this,transport));	
-		}		
 	}
-	
+
 	public ISquare firstSquare() {
 		return squares.get(0);
 	}
 
 	Player currentPlayer() {
-		assert players.size()>0;
+		assert players.size()>=0;
 		return players.peek();
 	}
 	
 	private boolean notOver() {
-		return winner == null;
+		return winner == null || players.size() == 0;
 	}
 
 	private void movePlayer(int roll) {
@@ -112,6 +104,8 @@ public class Game {
 			movePlayer(roll);
 			System.out.println("State : \n" + this);
 		}
+
+
 		System.out.println(winner + " has won.");
 	}
 	

@@ -62,11 +62,7 @@ class LastSquare extends Square {
     + isLastSquare() : boolean
 }
 
-class Snake extends Square {
-    - transport : int
-}
-
-class Ladder extends Square {
+class LadderOrSnake extends Square {
     - transport : int
 }
 
@@ -74,6 +70,10 @@ class FirstSquare extends Square {
     + isOccupied() : boolean
     + enter(p : Player)
     + leave(p : Player)
+}
+
+class Death extends Square {
+
 }
 
 Square -up-> "1" Game : game

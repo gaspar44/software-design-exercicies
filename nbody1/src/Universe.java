@@ -1,4 +1,3 @@
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
@@ -22,17 +21,24 @@ import java.util.Scanner;
  ******************************************************************************/
 
 public class Universe {
-    public  int n;             // number of bodies
-    public  Body[] bodies;     // array of n bodies
+    private  int numberOfBodies;             // number of bodies
+    private  Body[] bodies;     // array of n bodies
 
+    public int getNumberOfBodies() {
+        return numberOfBodies;
+    }
+
+    public Body[] getBodies() {
+        return bodies;
+    }
 
     // read universe from standard input
     public Universe(String fname) {
         try {
             Scanner in = new Scanner(new FileReader(fname));
-            n = Integer.parseInt(in.next());
+            numberOfBodies = Integer.parseInt(in.next());
             // number of bodies
-            System.out.println("n=" + n);
+            System.out.println("n=" + numberOfBodies);
 
             // the set scale for drawing on screen
             double radius = Double.parseDouble(in.next());
@@ -41,37 +47,41 @@ public class Universe {
             StdDraw.setYscale(-radius, +radius);
 
             // read in the n bodies
-            bodies = new Body[n];
-            for (int i = 0; i < n; i++) {
-                System.out.println("i=" + i);
-                double rx = Double.parseDouble(in.next());
-                double ry = Double.parseDouble(in.next());
-                double vx = Double.parseDouble(in.next());
-                double vy = Double.parseDouble(in.next());
-                double mass = Double.parseDouble(in.next());
-                double[] position = {rx, ry};
-                double[] velocity = {vx, vy};
-                Vector r = new Vector(position);
-                Vector v = new Vector(velocity);
-                bodies[i] = new Body(r, v, mass);
-            }
+            bodies = new Body[numberOfBodies];
+            initCelestialBodies(in);
+            in.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    private void initCelestialBodies(Scanner in) {
+        for (int i = 0; i < numberOfBodies; i++) {
+            double rx = Double.parseDouble(in.next());
+            double ry = Double.parseDouble(in.next());
+            double vx = Double.parseDouble(in.next());
+            double vy = Double.parseDouble(in.next());
+            double mass = Double.parseDouble(in.next());
+            double[] position = {rx, ry};
+            double[] velocity = {vx, vy};
+            Vector r = new Vector(position);
+            Vector v = new Vector(velocity);
+            bodies[i] = new Body(r, v, mass);
+        }
+    }
+
     // increment time by dt units, assume forces are constant in given interval
-    public void increaseTime(double dt) {
+    public void increaseTimeByTraveledDistance(double distance) {
 
         // initialize the forces to zero
-        Vector[] f = new Vector[n];
-        for (int i = 0; i < n; i++) {
+        Vector[] f = new Vector[numberOfBodies];
+        for (int i = 0; i < numberOfBodies; i++) {
             f[i] = new Vector(new double[2]);
         }
 
         // compute the forces
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < numberOfBodies; i++) {
+            for (int j = 0; j < numberOfBodies; j++) {
                 if (i != j) {
                     f[i] = f[i].plus(bodies[i].forceFrom(bodies[j]));
                 }
@@ -79,15 +89,8 @@ public class Universe {
         }
 
         // move the bodies
-        for (int i = 0; i < n; i++) {
-            bodies[i].move(f[i], dt);
-        }
-    }
-
-    // draw the n bodies
-    public void draw() {
-        for (int i = 0; i < n; i++) {
-            bodies[i].draw();
+        for (int i = 0; i < numberOfBodies; i++) {
+            bodies[i].move(f[i], distance);
         }
     }
 }

@@ -25,52 +25,36 @@
 
 public class Vector { 
 
-    private final int n;         // length of the vector
+    private final int numberOfElements;         // length of the vector
     private double[] data;       // array of vector's components
 
     // create the zero vector of length n
     public Vector(int n) {
-        this.n = n;
+        this.numberOfElements = n;
         this.data = new double[n];
     }
 
     // create a vector from an array
-    public Vector(double[] data) {
-        n = data.length;
+    public Vector(double[] otherVector) {
+        numberOfElements = otherVector.length;
 
-        // defensive copy so that client can't alter our copy of data[]
-        this.data = new double[n];
-        for (int i = 0; i < n; i++)
-            this.data[i] = data[i];
+        // defensive copy so that client can't alter our copy of otherVector[]
+        this.data = new double[numberOfElements];
+        for (int i = 0; i < numberOfElements; i++)
+            this.data[i] = otherVector[i];
     }
 
-    // create a vector from either an array or a vararg list
-    // this constructor uses Java's vararg syntax to support
-    // a constructor that takes a variable number of arguments, such as
-    // Vector x = new Vector(1.0, 2.0, 3.0, 4.0);
-    // Vector y = new Vector(5.0, 2.0, 4.0, 1.0);
-/*
-    public Vector(double... data) {
-        n = data.length;
-
-        // defensive copy so that client can't alter our copy of data[]
-        this.data = new double[n];
-        for (int i = 0; i < n; i++)
-            this.data[i] = data[i];
-    }
-*/
-    // return the length of the vector
     public int length() {
-        return n;
+        return numberOfElements;
     }
 
     // return the inner product of this Vector a and b
-    public double dot(Vector that) {
-        if (this.length() != that.length())
+    public double dot(Vector otherVector) {
+        if (this.length() != otherVector.length())
             throw new IllegalArgumentException("dimensions disagree");
         double sum = 0.0;
-        for (int i = 0; i < n; i++)
-            sum = sum + (this.data[i] * that.data[i]);
+        for (int i = 0; i < numberOfElements; i++)
+            sum = sum + (this.data[i] * otherVector.data[i]);
         return sum;
     }
 
@@ -79,30 +63,29 @@ public class Vector {
         return Math.sqrt(this.dot(this));
     }
 
-    // return the Euclidean distance between this and that
-    public double distanceTo(Vector that) {
-        if (this.length() != that.length())
+    public double euclideanDistanceTo(Vector otherVector) {
+        if (this.length() != otherVector.length())
             throw new IllegalArgumentException("dimensions disagree");
-        return this.minus(that).magnitude();
+        return this.minus(otherVector).magnitude();
     }
 
     // return this + that
-    public Vector plus(Vector that) {
-        if (this.length() != that.length())
+    public Vector plus(Vector vectorToAdd) {
+        if (this.length() != vectorToAdd.length())
             throw new IllegalArgumentException("dimensions disagree");
-        Vector c = new Vector(n);
-        for (int i = 0; i < n; i++)
-            c.data[i] = this.data[i] + that.data[i];
+        Vector c = new Vector(numberOfElements);
+        for (int i = 0; i < numberOfElements; i++)
+            c.data[i] = this.data[i] + vectorToAdd.data[i];
         return c;
     }
 
     // return this - that
-    public Vector minus(Vector that) {
-        if (this.length() != that.length())
+    public Vector minus(Vector vectorToSubstract) {
+        if (this.length() != vectorToSubstract.length())
             throw new IllegalArgumentException("dimensions disagree");
-        Vector c = new Vector(n);
-        for (int i = 0; i < n; i++)
-            c.data[i] = this.data[i] - that.data[i];
+        Vector c = new Vector(numberOfElements);
+        for (int i = 0; i < numberOfElements; i++)
+            c.data[i] = this.data[i] - vectorToSubstract.data[i];
         return c;
     }
 
@@ -114,16 +97,16 @@ public class Vector {
     // create and return a new object whose value is (this * factor)
     @Deprecated
     public Vector times(double factor) {
-        Vector c = new Vector(n);
-        for (int i = 0; i < n; i++)
+        Vector c = new Vector(numberOfElements);
+        for (int i = 0; i < numberOfElements; i++)
             c.data[i] = factor * data[i];
         return c;
     }
 
     // create and return a new object whose value is (this * factor)
     public Vector scale(double factor) {
-        Vector c = new Vector(n);
-        for (int i = 0; i < n; i++)
+        Vector c = new Vector(numberOfElements);
+        for (int i = 0; i < numberOfElements; i++)
             c.data[i] = factor * data[i];
         return c;
     }
@@ -140,9 +123,9 @@ public class Vector {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append('(');
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numberOfElements; i++) {
             s.append(data[i]);
-            if (i < n-1) s.append(", ");
+            if (i < numberOfElements -1) s.append(", ");
         }
         s.append(')');
         return s.toString();

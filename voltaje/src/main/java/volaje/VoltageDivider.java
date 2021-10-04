@@ -1,10 +1,24 @@
 package volaje;
 
 public class VoltageDivider {
-  private Resistor resistor1 = null;
-  private Resistor resistor2 = null;
+  private Resistor resistor1;
+
+  public Resistor getResistor1() {
+    return resistor1;
+  }
+
+  public Resistor getResistor2() {
+    return resistor2;
+  }
+
+  public double getCoincidence() {
+    return coincidence;
+  }
+
+  private Resistor resistor2;
   private double coincidence;
-  // TODO: three corresponding getters
+
+
   public VoltageDivider(Resistor r1, Resistor r2, double coincidence) {
     resistor1 = r1;
     resistor2 = r2;

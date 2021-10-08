@@ -17,8 +17,11 @@ public class Series {
     makeResistors();
   }
 
-  private void makeResistors() { /* TODO */
-
+  private void makeResistors() {
+    for (double powerFactor: POWER_FACTORS  ) {
+      Resistor resitor = new Resistor(powerFactor,this);
+      resistors.add(resitor);
+    }
   }
 
   public double getPrecision() {

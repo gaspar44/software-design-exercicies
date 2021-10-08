@@ -7,8 +7,4 @@ public abstract class BinaryOperator implements Expression{
     this.right = right;
   }
 
-  @Override
-  public DualNumber evaluate(DualNumber dn) {
-    return null;
-  }
 }

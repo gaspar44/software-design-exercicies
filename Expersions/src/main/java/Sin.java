@@ -7,6 +7,10 @@ public class Sin implements Expression{
 
   @Override
   public DualNumber evaluate(DualNumber dualNumber) {
-    return null;
+    DualNumber dn1 = expr.evaluate(dualNumber);
+    double senoDerivate = Math.sin(dn1.u);
+    double cos = Math.cos(dn1.u);
+
+    return new DualNumber(senoDerivate, dn1.uprime * cos);
   }
 }

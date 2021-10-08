@@ -6,6 +6,6 @@ public class Constant implements Expression{
   }
   @Override
   public DualNumber evaluate(DualNumber dualNumber) {
-    return null;
+    return new DualNumber(value,0.0);
   }
 }

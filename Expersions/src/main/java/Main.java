@@ -8,8 +8,7 @@ public class Main {
 
   public static void main(String[] args) {
     Expression x = new X();
-    Expression expr = new Sin(new Add(new Constant(Math.PI / 2.0),
-        new Multiply(x, x)));
+    Expression expr = new Sin(new Add(new Constant(Math.PI / 2.0), new Multiply(x, x)));
     double x0 = 4.0;
     DualNumber res = expr.evaluate(new DualNumber(x0, 1.0));
     double valorReal = f(x0);

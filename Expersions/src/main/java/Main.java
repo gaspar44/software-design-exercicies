@@ -6,13 +6,33 @@ public class Main {
     return Math.cos(Math.PI/2.0 + x*x)*2*x;
   }
 
+  private static double dfLog(double x) {
+    return 4*x / ((2*x*x) + Math.PI );
+  }
+
   public static void main(String[] args) {
-    Expression x = new X();
-    Expression expr = new Sin(new Add(new Constant(Math.PI / 2.0), new Multiply(x, x)));
     double x0 = 4.0;
-    DualNumber res = expr.evaluate(new DualNumber(x0, 1.0));
     double valorReal = f(x0);
     double derivadaReal = df(x0);
+
+    Expression x = new X();
+    Expression commonExpression = new Add(new Constant(Math.PI / 2.0), new Multiply(x, x));
+    Expression expr = new Sin(commonExpression);
+    DualNumber res = expr.evaluate(new DualNumber(x0, 1.0));
+    System.out.println("running sen expresion");
+    runSimulation(x0,valorReal,derivadaReal,res);
+    valorReal = Math.log(x0);
+    derivadaReal = dfLog(x0);
+    expr = new Log(commonExpression) ;
+    res = expr.evaluate(new DualNumber(x0,1.0));
+    System.out.println("running log expresion");
+    runSimulation(x0,valorReal,derivadaReal,res);
+
+
+
+  }
+
+  public static void runSimulation(double x0,double valorReal, double derivadaReal, DualNumber res) {
     System.out.println("real");
     System.out.println("f(" + x0 +") = "+valorReal);
     System.out.println("f'(" + x0 + ") = "+derivadaReal);

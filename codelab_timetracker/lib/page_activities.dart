@@ -1,4 +1,5 @@
 import 'package:codelab_timetracker/page_intervals.dart';
+import 'package:codelab_timetracker/page_report.dart';
 import 'package:codelab_timetracker/tree.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +30,13 @@ class _PageActivitiesState extends State<PageActivities> {
         title: Text(tree.root.name),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.home),
-              onPressed: () {}
-            // TODO go home page = root
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute<void>(
+                builder: (context) => PageReport(),
+              ));
+            },
+          // TODO go home page = root
           ),
           //TODO other actions
         ],
